@@ -66,65 +66,127 @@ def load_df_genes(path):
 
 def load_padloc(path):
     required = ["system","target.name","start","end","strand"]
-    keep = required + ["target.description","system.number","hmm.name","protein.name", "full.seq.E.value","domain.iE.value","target.coverage","hmm.coverage","seqid"]
+    keep = required + ["protein.name", "full.seq.E.value","domain.iE.value","target.coverage","hmm.coverage"]
     return read_table(path, required=required, keep=keep)
 
 
 # ---- clean Defensefinder columns ----
-def tidy_df_genes(rows):
+def tidy_df_genes(rows, keep_only_mapped=False):
+    """
+    Clean DefenceFinder gene rows in memory.
+    - gene_name: keep suffix after "__"
+    - sys_id: replace with last token of model_fqn path
+    - model_fqn: reduce to the token after 'defense-finder-models/'
+    - rename keys per `ren`, keeping others by default
+    """
+    ren = {
+        "hit_id": "locus_tag",
+        "model_fqn": "df_model",
+        "gene_name": "df_gene_name",
+        "sys_id": "df_system",
+        "hit_i_eval": "df_hit_i_eval",
+        "hit_profile_cov": "df_hit_profile_cov",
+        "hit_seq_cov": "df_hit_seq_cov",
+        "hit_status": "df_hit_status",
+        "sys_wholeness": "df_sys_wholeness",
+        "hit_score": "df_hit_score",
+        "replicon": "sample_name"
+    }
+
     out = []
     for rec in rows:
-        rec = rec.copy()  # don’t mutate caller’s list
+        r = rec.copy()
 
-        # gene_name: keep after "__"
-        if "__" in rec["gene_name"]:
-            rec["gene_name"] = rec["gene_name"].split("__", 1)[1]
+        # gene_name
+        gn = r.get("gene_name", "")
+        if "__" in gn:
+            r["gene_name"] = gn.split("__", 1)[1]
 
         # derive from model_fqn
-        model = rec.get("model_fqn_full") or ""
+        model = r.get("model_fqn") or ""
         if model:
-            # sys_id = last token of the path
+            # sys_id = last path token
             last_tok = model.strip("/").split("/")[-1]
             if last_tok:
-                rec["sys_id"] = last_tok
-
-            # model_fqn = bit after "defense-finder-models/"
+                r["sys_id"] = last_tok
+            # model_fqn = token after 'defense-finder-models/'
             parts = model.strip("/").split("/")
-            if "defense-finder-models" in parts:
+            try:
                 i = parts.index("defense-finder-models")
                 if i + 1 < len(parts):
-                    rec["model_fqn"] = parts[i + 1]
+                    r["model_fqn"] = parts[i + 1]
+            except ValueError:
+                pass  # leave as-is if anchor missing
 
-        out.append(rec)
+        # rename keys
+        if keep_only_mapped:
+            r = {ren[k]: r[k] for k in ren if k in r}
+        else:
+            for old, new in ren.items():
+                if old in r:
+                    r[new] = r.pop(old)
+
+        out.append(r)
+
     return out
 
 
-# ---- Bakta TSV reader ----
-def load_bakta_annotated_tsv(path):
+# ---- clean Padloc columns ----
+def tidy_padloc(rows, keep_only_mapped=False):
     """
-    Reads a Bakta 'annotated with Bakta' TSV where the header is commented out.
-    Returns a list of dict rows. Filters nothing yet.
+    Clean PADLOC rows in memory:
+      - rename PADLOC headers to unified names
+      - cast start/end to int where possible
+      - normalise strand to '+' / '-'
     """
-    path = Path(path)
-    with path.open("r", newline="") as fh:
-        header = None
-        # Scan to the commented header line, e.g. "#Sequence Id\tType\tStart..."
-        for line in fh:
-            if not line.strip():
-                continue
-            if line.lstrip().startswith("#Sequence"):
-                header = [h.strip() for h in line.lstrip("#").strip().split("\t")]
-                break
-        if header is None:
-            raise ValueError(f"{path} has no '#Sequence ...' header line")
-        # Now read remaining non-comment lines as data under that header
-        data_iter = (ln for ln in fh if ln.strip() and not ln.lstrip().startswith("#"))
-        reader = csv.DictReader(data_iter, delimiter="\t", fieldnames=header)
-        rows = list(reader)
-    return rows
+    ren = {
+        "target.name": "locus_tag",
+        "system": "pl_system",
+        "protein.name": "pl_gene_name",
+        "full.seq.E.value": "pl_evalue",
+        "domain.iE.value": "pl_domain_ievalue",
+        "target.coverage": "pl_target_cov",
+        "hmm.coverage": "pl_hmm_cov",
+        "start": "pl_start",
+        "end": "pl_end",
+        "strand": "pl_strand"
+    }
+
+    out = []
+    for rec in rows:
+        r = rec.copy()
+
+        # rename keys
+        if keep_only_mapped:
+            r = {new: r.get(old, "") for old, new in ren.items() if old in r}
+        else:
+            for old, new in ren.items():
+                if old in r and new != old:
+                    r[new] = r.pop(old)
+
+        # cast coordinates
+        for k in ("start", "end"):
+            if k in r:
+                try:
+                    # sometimes PADLOC writes floats-as-strings; be chill
+                    r[k] = int(float(r[k]))
+                except Exception:
+                    pass
+
+        # normalise strand
+        if "strand" in r:
+            s = str(r["strand"]).strip()
+            if s in ("1", "+", "plus"):
+                r["strand"] = "+"
+            elif s in ("-1", "-", "minus"):
+                r["strand"] = "-"
+            # else leave whatever PADLOC gave
+
+        out.append(r)
+    return out
 
 
-# ---- Bakta TSV cleaner ----
+# ---- Bakta TSV reader and cleaner ----
 def load_bakta_clean(path):
     """
     Read a Bakta 'Annotated with Bakta' TSV (with a commented header),
@@ -132,13 +194,13 @@ def load_bakta_clean(path):
     """
     # only keep/rename these columns
     ren = {
-        "Locus Tag":   "locus_tag",
-        "Start":       "start",
-        "Stop":        "end",
-        "Strand":      "strand",
-        "Product":     "product",
-        "Type":        "type",
-        "Gene":        "gene",
+        "Locus Tag": "locus_tag",
+        "Start": "start",
+        "Stop": "end",
+        "Strand": "strand",
+        "Product": "product",
+        "Type": "type",
+        "Gene": "gene",
     }
     path = Path(path)
     with path.open("r", newline="", encoding="utf-8") as fh:
@@ -202,12 +264,13 @@ def main():
     bakta_rows = load_bakta_clean(args.bakta)
     df_raw = load_df_genes(args.defensefinder)
     df_clean = tidy_df_genes(df_raw)
-    padloc_rows = load_padloc(args.padloc)
+    padloc_raw = load_padloc(args.padloc)
+    padloc_clean = tidy_padloc(padloc_raw)
 
-    write_tsv(bakta_rows,  args.outdir / "bakta_clean.tsv",         ["locus_tag","start","end","strand","product","type","gene"])
-    write_tsv(df_clean,    args.outdir / "defensefinder_clean.tsv", ["replicon","hit_id","gene_name","sys_id","hit_i_eval","hit_profile_cov","hit_seq_cov","model_fqn","hit_status","sys_wholeness","hit_score"])
-    write_tsv(padloc_rows, args.outdir / "padloc_kept.tsv",         ["system","system.number","target.name","hmm.name","protein.name","full.seq.E.value","domain.iE.value","target.coverage","hmm.coverage","start","end","strand","target.description","seqid"])
+    # write
+    write_tsv(bakta_rows,  args.outdir / "bakta_clean.tsv",         ["locus_tag","product","type","gene","start","end","strand"])
+    write_tsv(df_clean,    args.outdir / "defensefinder_clean.tsv", ["locus_tag","df_gene_name","df_system","df_model","df_hit_i_eval","df_hit_profile_cov","df_hit_seq_cov","df_hit_status","df_sys_wholeness","df_hit_score","sample_name"])
+    write_tsv(padloc_clean, args.outdir / "padloc_kept.tsv",         ["locus_tag","pl_gene_name","pl_system","pl_evalue","pl_domain_ievalue","pl_target_cov","pl_hmm_cov","pl_start","pl_end","pl_strand"])
 
 if __name__ == "__main__":
     main()
-
