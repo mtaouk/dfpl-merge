@@ -20,11 +20,11 @@ The tool requires three inputs:
 
 1. **DefenseFinder TSV** (`-d` / `--defensefinder`)  
    - defense_finder_genes.tsv output tsv from DefenseFinder.  
-   - Must include columns: `replicon`, `hit_id`, `gene_name`, `sys_id`, `hit_i_eval`, `hit_profile_cov`, `hit_seq_cov`, `model_fqn`, `hit_status`, `sys_wholeness`, `hit_score`.  
+   - Must include columns: `hit_id`, `gene_name`, `sys_id`, `hit_i_eval`, `hit_profile_cov`, `hit_seq_cov`, `model_fqn`, `hit_status`, `sys_wholeness`, `hit_score`.  
 
 2. **PADLOC CSV** (`-p` / `--padloc`)  
    - Standard output csv from PADLOC.  
-   - Must include columns: `system`, `target.name`, `start`, `end`, `strand`.  
+   - Must include columns: `system`, `target.name`, `target.name`, `protein.name`, `full.seq.E.value`, `domain.iE.value`, `target.coverage`, `hmm.coverage`, `start`, `end`, `strand`.  
 
 3. **Bakta annotation TSV** (`-b` / `--bakta`)  
    - Genomic annotations with coding sequences.  
