@@ -97,7 +97,7 @@ It has to be the **same genome** or it won't work. If the genome wasn't annotate
 
 ---
 
-## Usage
+## Usage example
 
 ```bash
 python df-padloc-merge.py \
