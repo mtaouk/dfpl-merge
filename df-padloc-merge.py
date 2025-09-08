@@ -90,8 +90,7 @@ def tidy_df_genes(rows, keep_only_mapped=False):
         "hit_seq_cov": "df_hit_seq_cov",
         "hit_status": "df_hit_status",
         "sys_wholeness": "df_sys_wholeness",
-        "hit_score": "df_hit_score",
-        "replicon": "sample_name"
+        "hit_score": "df_hit_score"
     }
 
     out = []
