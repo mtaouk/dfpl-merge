@@ -34,7 +34,7 @@ def build_parser():
     req = p.add_argument_group("Required arguments")
     req.add_argument("-d", "--defensefinder", metavar="DF_TSV", type=Path, required=True, help="DefenseFinder genes table")
     req.add_argument("-p", "--padloc", metavar="PADLOC_TSV", type=Path, required=True, help="PADLOC results table")
-    req.add_argument("-b", "--bakta", metavar="BAKTA_GFF_OR_TSV", type=Path, required=True, help="Bakta annotations")
+    req.add_argument("-b", "--bakta", metavar="BAKTA_TSV", type=Path, required=True, help="Bakta annotations")
     req.add_argument("-o", "--outdir", metavar="OUTDIR", type=Path, required=True, help="Output directory")
    
     opt = p.add_argument_group("Optional arguments")
