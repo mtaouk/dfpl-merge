@@ -4,7 +4,8 @@
 # ---- imports ---- 
 import argparse # parse command-line flags
 import csv # for reading the input files
-from pathlib import Path # nicer file paths than raw strings. 
+from pathlib import Path # nicer file paths than raw strings 
+import pandas as pd # aparently need this for the merging of dataframes
 
 
 # ---- pretty help with single metavar ---- 
@@ -130,7 +131,6 @@ def tidy_df_genes(rows, keep_only_mapped=False):
 
     return out
 
-
 # ---- clean Padloc columns ----
 def tidy_padloc(rows, keep_only_mapped=False):
     """
@@ -147,9 +147,9 @@ def tidy_padloc(rows, keep_only_mapped=False):
         "domain.iE.value": "pl_domain_ievalue",
         "target.coverage": "pl_target_cov",
         "hmm.coverage": "pl_hmm_cov",
-        "start": "pl_start",
-        "end": "pl_end",
-        "strand": "pl_strand"
+        "start": "start",
+        "end": "end",
+        "strand": "strand"
     }
 
     out = []
@@ -185,7 +185,6 @@ def tidy_padloc(rows, keep_only_mapped=False):
         out.append(r)
     return out
 
-
 # ---- Bakta TSV reader and cleaner ----
 def load_bakta_clean(path):
     """
@@ -197,10 +196,7 @@ def load_bakta_clean(path):
         "Locus Tag": "locus_tag",
         "Start": "start",
         "Stop": "end",
-        "Strand": "strand",
-        "Product": "product",
-        "Type": "type",
-        "Gene": "gene",
+        "Strand": "strand"
     }
     path = Path(path)
     with path.open("r", newline="", encoding="utf-8") as fh:
@@ -238,6 +234,56 @@ def load_bakta_clean(path):
 
     return out
 
+# ---- merge DF + Padloc (+ Bakta coords) ----
+def merge_all(df_rows, pl_rows, bakta_records=None):
+    df = pd.DataFrame(df_rows)
+    pl = pd.DataFrame(pl_rows)
+
+    # outer merge on locus_tag
+    merged = pd.merge(df, pl, on="locus_tag", how="outer", suffixes=("_df", "_pl"))
+
+    # backfill with Bakta coords if provided
+    if bakta_records is not None:
+        bakta = pd.DataFrame(bakta_records)
+        merged = pd.merge(merged, bakta, on="locus_tag", how="left", suffixes=("", "_bakta"))
+
+        for col in ["start", "end", "strand"]:
+            bakta_col = f"{col}_bakta"
+            if bakta_col in merged.columns:
+                merged[col] = merged.get(col).where(merged.get(col).notna(), merged[bakta_col])
+
+        # drop helper bakta columns
+        merged = merged.drop(columns=[c for c in merged.columns if c.endswith("_bakta")])
+
+    # replace NaN with "NA" for output
+    merged = merged.fillna("NA")
+
+    return merged.to_dict(orient="records")
+
+# ---- summary table ----
+def make_summary_table(merged_records):
+    df = pd.DataFrame(merged_records)
+
+    def source_type(row):
+        has_df = row.get("df_gene_name") not in (None, "NA", "")
+        has_pl = row.get("pl_gene_name") not in (None, "NA", "")
+        if has_df and has_pl:
+            return "Both"
+        elif has_df:
+            return "DF only"
+        elif has_pl:
+            return "Padloc only"
+        else:
+            return "NA"
+
+    summary = pd.DataFrame()
+    summary["locus_tag"] = df["locus_tag"]
+    summary["source_type"] = df.apply(source_type, axis=1)
+    summary["consolidated_gene"] = df.apply(lambda r: r["df_gene_name"] if r["df_gene_name"] not in (None, "NA", "") else r["pl_gene_name"], axis=1)
+    summary["consolidated_system"] = df.apply(lambda r: r["df_system"] if r["df_system"] not in (None, "NA", "") else r["pl_system"], axis=1)
+
+    return summary.to_dict(orient="records")
+
 
 # ---- write TSVs ----
 def write_tsv(rows, path, field_order):
@@ -257,20 +303,30 @@ def write_tsv(rows, path, field_order):
 
 # ---- main ----
 def main():
-    parser = build_parser()
-    args = parser.parse_args()
+    args = build_parser().parse_args()
 
-    # load
+    # load + tidy
+    df_rows = tidy_df_genes(load_df_genes(args.defensefinder))
+    pl_rows = tidy_padloc(load_padloc(args.padloc))
     bakta_rows = load_bakta_clean(args.bakta)
-    df_raw = load_df_genes(args.defensefinder)
-    df_clean = tidy_df_genes(df_raw)
-    padloc_raw = load_padloc(args.padloc)
-    padloc_clean = tidy_padloc(padloc_raw)
 
-    # write
-    write_tsv(bakta_rows,  args.outdir / "bakta_clean.tsv",         ["locus_tag","product","type","gene","start","end","strand"])
-    write_tsv(df_clean,    args.outdir / "defensefinder_clean.tsv", ["locus_tag","df_gene_name","df_system","df_model","df_hit_i_eval","df_hit_profile_cov","df_hit_seq_cov","df_hit_status","df_sys_wholeness","df_hit_score","sample_name"])
-    write_tsv(padloc_clean, args.outdir / "padloc_kept.tsv",         ["locus_tag","pl_gene_name","pl_system","pl_evalue","pl_domain_ievalue","pl_target_cov","pl_hmm_cov","pl_start","pl_end","pl_strand"])
+    merged = merge_all(df_rows, pl_rows, bakta_records=bakta_rows)
 
+    outpath = args.outdir / "df_padloc_merged.tsv"
+    # define field order with coordinates last
+    if merged:
+        cols = [c for c in merged[0].keys() if c not in ("start", "end", "strand")]
+        field_order = cols + ["start", "end", "strand"]
+    else:
+        field_order = ["locus_tag", "df_model", "df_gene_name", "df_system", "df_hit_i_eval", 
+                        "df_hit_profile_cov", "df_hit_seq_cov", "df_hit_status", "df_sys_wholeness",
+                        "df_hit_score", "sample_name", "pl_system", "pl_gene_name", "pl_evalue",
+                        "pl_domain_ievalue", "pl_target_cov", "pl_hmm_cov", "start", "end", "strand"]
+    write_tsv(merged, outpath, field_order=field_order)
+
+    summary = make_summary_table(merged)
+    summary_path = args.outdir / "df_padloc_consolidated.tsv"
+    write_tsv(summary, summary_path, field_order=["locus_tag", "source_type", "consolidated_gene", "consolidated_system"])
+    
 if __name__ == "__main__":
     main()
