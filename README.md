@@ -14,6 +14,33 @@
 
 ---
 
+## Installation
+
+This tool is written in Python 3 and relies on the following packages:
+
+- `pandas` (for dataframe manipulation)
+- Standard library modules: `argparse`, `csv`, `pathlib`
+
+### Steps
+
+1. Clone this repository:
+
+```bash
+git clone https://github.com/mtaouk/df-padloc-merge.git
+cd df-padloc-merge
+```
+
+2. Install the required package
+```bash
+conda install pandas
+```
+or
+```bash
+pip install pandas
+```
+
+3. Run the script
+
 ## Inputs
 
 The tool requires three inputs:
