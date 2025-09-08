@@ -57,7 +57,7 @@ Optional arguments:
   -v, --verbose                 Verbose logs
 ```
 
-### example
+### Example
 
 ```bash
 python df-padloc-merge.py \
