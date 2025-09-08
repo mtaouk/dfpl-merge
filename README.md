@@ -41,6 +41,35 @@ pip install pandas
 
 3. Run the script
 
+---
+
+## Usage
+
+```bash
+Required arguments:
+  -d, --defensefinder DF_TSV    DefenseFinder genes table
+  -p, --padloc PADLOC_TSV       PADLOC results table
+  -b, --bakta BAKTA_GFF_OR_TSV  Bakta annotations
+  -o, --outdir OUTDIR           Output directory
+
+Optional arguments:
+  -h, --help                    Show this help and exit
+  -v, --verbose                 Verbose logs
+```
+
+### example
+
+```bash
+python df-padloc-merge.py \
+  -d path/to/defensefinder.tsv \
+  -p path/to/padloc.tsv \
+  -b path/to/bakta.tsv \
+  -o path/to/output_dir \
+  -v
+```
+
+---
+
 ## Inputs
 
 The tool requires three inputs:
@@ -124,13 +153,5 @@ It has to be the **same genome** or it won't work. If the genome wasn't annotate
 
 ---
 
-## Usage example
 
-```bash
-python df-padloc-merge.py \
-  -d path/to/defensefinder.tsv \
-  -p path/to/padloc.tsv \
-  -b path/to/bakta.tsv \
-  -o path/to/output_dir \
-  -v
 
