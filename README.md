@@ -76,16 +76,15 @@ It has to be the **same genome** or it won't work. If the genome wasn't annotate
 | `df_hit_status` | Hit status |
 | `df_sys_wholeness` | System completeness |
 | `df_hit_score` | DefenseFinder hit score |
-| `sample_name` | Replicon/sample identifier |
-| `start` | Start coordinate (PADLOC or Bakta) |
-| `end` | End coordinate (PADLOC or Bakta) |
-| `strand` | Strand (+ / -) |
 | `pl_system` | PADLOC system identifier |
 | `pl_gene_name` | PADLOC gene name |
 | `pl_evalue` | PADLOC full sequence e-value |
 | `pl_domain_ievalue` | PADLOC domain e-value |
 | `pl_target_cov` | PADLOC target coverage |
 | `pl_hmm_cov` | PADLOC HMM coverage |
+| `start` | Start coordinate (PADLOC or Bakta) |
+| `end` | End coordinate (PADLOC or Bakta) |
+| `strand` | Strand (+ / -) |
 
 ### 2. Consolidated Summary Table (`df_padloc_consolidated.tsv`)
 
