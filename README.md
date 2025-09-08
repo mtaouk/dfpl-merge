@@ -90,8 +90,9 @@ The tool requires three inputs:
 
 ## Important
 
-This tool **only works if you have used Bakta to annotate your assemblies** and then run DefenseFinder and PADLOC on that same assembly.  
-It has to be the **same genome** or it won't work. If the genome wasn't annotated with Bakta, coordinates cannot be filled, and the merge will fail.
+* This tool **only works if you have used Bakta to annotate your assemblies** and then run DefenseFinder and PADLOC on that same assembly.  
+* If the genome wasn't annotated with Bakta, coordinates cannot be filled, and the merge will fail.
+* All inputs must be from the same genome assembly
 
 ---
 
