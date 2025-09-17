@@ -1,6 +1,6 @@
-# dfpd-merge
+# dfpl-merge
 
-`dfpd-merge` is a command-line tool for merging, consolidating, and resolving DefenseFinder and PADLOC results with genomic coordinates from Bakta annotations. It produces both a full merged table and a consolidated summary table, simplifying downstream analyses of defence systems in prokaryotic genomes.
+`dfpl-merge` is a command-line tool for merging, consolidating, and resolving DefenseFinder and PADLOC results with genomic coordinates from Bakta annotations. It produces both a full merged table and a consolidated summary table, simplifying downstream analyses of defence systems in prokaryotic genomes.
 
 ---
 
@@ -26,8 +26,8 @@ This tool is written in Python 3 and relies on the following packages:
 1. Clone this repository:
 
 ```bash
-git clone https://github.com/mtaouk/dfpd-merge.git
-cd dfpd-merge
+git clone https://github.com/mtaouk/dfpl-merge.git
+cd dfpl-merge
 ```
 
 2. Install the required package
@@ -60,7 +60,7 @@ Optional arguments:
 ### Example
 
 ```bash
-python dfpd-merge.py \
+python dfpl-merge.py \
   -d path/to/defensefinder.tsv \
   -p path/to/padloc.tsv \
   -b path/to/bakta.tsv \
