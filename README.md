@@ -64,7 +64,6 @@ python dfpl-merge.py \
   -p path/to/padloc.tsv \
   -b path/to/bakta.tsv \
   -o path/to/output_dir \
-  -v
 ```
 
 ---
