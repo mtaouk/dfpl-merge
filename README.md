@@ -109,7 +109,7 @@ The tool requires three inputs:
    - **Full merged table:** key columns from DefenseFinder and PADLOC, plus unified `start`, `end`, `strand`.  
    - **Consolidated summary table:**  
      - `locus_tag`  
-     - `source_type` → `"DF only"`, `"PADLOC only"`, or `"both"`  
+     - `source_type` → `"DefenseFinder only"`, `"PADLOC only"`, or `"both"`  
      - `consolidated_gene` → DefenseFinder gene name if present, otherwise PADLOC gene name  
      - `consolidated_system` → DefenseFinder system name if present, otherwise PADLOC system
 
@@ -146,9 +146,9 @@ The tool requires three inputs:
 | Column | Description |
 |--------|-------------|
 | `locus_tag` | Unique gene identifier |
-| `source_type` | `"DF only"`, `"PADLOC only"`, or `"both"` |
-| `consolidated_gene` | Unified gene name (prefer DF if available) |
-| `consolidated_system` | Unified system name (prefer DF if available) |
+| `source_type` | `"DefenseFinder only"`, `"PADLOC only"`, or `"both"` |
+| `consolidated_gene` | Unified gene name (prefer DefenseFinder if available) |
+| `consolidated_system` | Unified system name (prefer DefenseFinder if available) |
 
 ---
 
