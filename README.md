@@ -49,7 +49,7 @@ pip install pandas
 Required arguments:
   -d, --defensefinder DF_TSV    DefenseFinder genes table
   -p, --padloc PADLOC_TSV       PADLOC results table
-  -b, --bakta BAKTA_GFF_OR_TSV  Bakta annotations
+  -b, --bakta BAKTA_TSV         Bakta annotations
   -o, --outdir OUTDIR           Output directory
 
 Optional arguments:
