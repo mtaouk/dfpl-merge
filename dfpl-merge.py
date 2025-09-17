@@ -22,34 +22,19 @@ from pathlib import Path # nicer file paths than raw strings
 import pandas as pd # aparently need this for the merging of dataframes
 
 
-# ---- pretty help with single metavar ---- 
-class OneMetavarHelp(argparse.HelpFormatter):
-    def __init__(self, prog):
-        super().__init__(prog, max_help_position=36, width=100)
-    def _format_action_invocation(self, action):
-        if not action.option_strings:
-            return super()._format_action_invocation(action)
-        opts = ", ".join(action.option_strings)
-        if action.nargs == 0:
-            return opts
-        mv = self._metavar_formatter(action, action.dest)(1)[0]
-        return f"{opts} {mv}"
-
-
 # ----argument parser ---- 
 def build_parser():
     p = argparse.ArgumentParser(
         prog="df-padloc-merge", 
         description="Merge, consolidate and resolve DefenseFinder and Padloc outputs",
         epilog="Example: df-padloc-merge -d DF.tsv -p PADLOC.tsv -b bakta.tsv -o out",
-        add_help=False,
-        formatter_class=OneMetavarHelp)
+        add_help=False)
     
     req = p.add_argument_group("Required arguments")
-    req.add_argument("-d", "--defensefinder", metavar="DF_TSV", type=Path, required=True, help="DefenseFinder genes table")
-    req.add_argument("-p", "--padloc", metavar="PADLOC_TSV", type=Path, required=True, help="PADLOC results table")
-    req.add_argument("-b", "--bakta", metavar="BAKTA_TSV", type=Path, required=True, help="Bakta annotations")
-    req.add_argument("-o", "--outdir", metavar="OUTDIR", type=Path, required=True, help="Output directory")
+    req.add_argument("-d", metavar="DEFFINDER_TSV", type=Path, required=True, help="DefenseFinder genes table")
+    req.add_argument("-p", metavar="PADLOC_TSV", type=Path, required=True, help="PADLOC results table")
+    req.add_argument("-b", metavar="BAKTA_TSV", type=Path, required=True, help="Bakta annotations")
+    req.add_argument("-o", metavar="OUTDIR", type=Path, required=True, help="Output directory")
    
     opt = p.add_argument_group("Optional arguments")
     opt.add_argument("-h", "--help", action="help", help="Show this help and exit")

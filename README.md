@@ -47,10 +47,10 @@ pip install pandas
 
 ```bash
 Required arguments:
-  -d, --defensefinder DF_TSV    DefenseFinder genes table
-  -p, --padloc PADLOC_TSV       PADLOC results table
-  -b, --bakta BAKTA_TSV         Bakta annotations
-  -o, --outdir OUTDIR           Output directory
+  -d, DEFFINDER_TSV    DefenseFinder genes table
+  -p, PADLOC_TSV       PADLOC results table
+  -b, BAKTA_TSV        Bakta annotations
+  -o, OUTDIR           Output directory
 
 Optional arguments:
   -h, --help                    Show this help and exit
@@ -74,15 +74,15 @@ python dfpl-merge.py \
 
 The tool requires three inputs:
 
-1. **DefenseFinder TSV** (`-d` / `--defensefinder`)  
+1. **DefenseFinder TSV** (`-d`)  
    - defense_finder_genes.tsv output tsv from DefenseFinder.  
    - Must include columns: `hit_id`, `gene_name`, `sys_id`, `hit_i_eval`, `hit_profile_cov`, `hit_seq_cov`, `model_fqn`, `hit_status`, `sys_wholeness`, `hit_score`.  
 
-2. **PADLOC CSV** (`-p` / `--padloc`)  
+2. **PADLOC CSV** (`-p`)  
    - Standard output csv from PADLOC.  
    - Must include columns: `system`, `target.name`, `target.name`, `protein.name`, `full.seq.E.value`, `domain.iE.value`, `target.coverage`, `hmm.coverage`, `start`, `end`, `strand`.  
 
-3. **Bakta annotation TSV** (`-b` / `--bakta`)  
+3. **Bakta annotation TSV** (`-b`)  
    - Genomic annotations with coding sequences.  
    - Must contain a commented header line beginning with `#Sequence ...` and columns: `Locus Tag`, `Start`, `Stop`, `Strand`.  
 
