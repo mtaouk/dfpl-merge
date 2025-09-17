@@ -1,0 +1,27 @@
+locus_tag	source_type	consolidated_gene	consolidated_system
+EGDEDF_00054	Padloc only	PDC-M05A	PDC-M05
+EGDEDF_00055	Padloc only	PDC-M05B	PDC-M05
+EGDEDF_00396	Both	cas3_I_5	CAS_Class1-Subtype-I-E
+EGDEDF_00397	Both	cas8e_I-E_1	CAS_Class1-Subtype-I-E
+EGDEDF_00398	Both	cse2gr11_I-E_2	CAS_Class1-Subtype-I-E
+EGDEDF_00399	Both	cas7_I-E_16	CAS_Class1-Subtype-I-E
+EGDEDF_00400	Both	cas5_I-E_3	CAS_Class1-Subtype-I-E
+EGDEDF_00401	Both	cas6e_I_II_III_IV_V_VI_1	CAS_Class1-Subtype-I-E
+EGDEDF_00402	Both	cas1_I-E_1	CAS_Class1-Subtype-I-E
+EGDEDF_00403	Both	cas2_I-E_2	CAS_Class1-Subtype-I-E
+EGDEDF_00470	Padloc only	SspF	DMS_other
+EGDEDF_00471	Padloc only	DrmMII	DMS_other
+EGDEDF_00676	Padloc only	PDC-S07	PDC-S07
+EGDEDF_00853	Padloc only	ATPase-Toprim_I-B	retron_I-B
+EGDEDF_00854	Padloc only	RT_I-B	retron_I-B
+EGDEDF_01860	Padloc only	DrmMII	DMS_other
+EGDEDF_01861	Padloc only	oMTase	DMS_other
+EGDEDF_02625	Padloc only	PDC-S07	PDC-S07
+EGDEDF_02917	Padloc only	PD-T4-6	PD-T4-6
+EGDEDF_03093	Both	LmuA_effector_Lipase	Lamassu-Lipase
+EGDEDF_03094	Both	LmuC_acc_Lipase	Lamassu-Lipase
+EGDEDF_03095	Both	LmuB_SMC_Lipase	Lamassu-Lipase
+EGDEDF_03097	DefenseFinder only	PD-T7-1	PD-T7-1
+EGDEDF_03099	Both	GajA	Gabija
+EGDEDF_03100	Both	GajB_3	Gabija
+EGDEDF_03195	Padloc only	PDC-S71	PDC-S71

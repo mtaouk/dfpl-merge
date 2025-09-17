@@ -47,7 +47,7 @@ pip install pandas
 
 ```bash
 Required arguments:
-  -d, DEFFINDER_TSV    DefenseFinder genes table
+  -d, DEFENSEFINDER_TSV    DefenseFinder genes table
   -p, PADLOC_TSV       PADLOC results table
   -b, BAKTA_TSV        Bakta annotations
   -o, OUTDIR           Output directory
@@ -118,20 +118,20 @@ The tool requires three inputs:
 
 ## Outputs
 
-### 1. Full Merged Table (`deffinder_padloc_merged.tsv`)
+### 1. Full Merged Table (`defensefinder_padloc_merged.tsv`)
 
 | Column | Description |
 |--------|-------------|
 | `locus_tag` | Unique gene identifier |
-| `deffinder_model` | DefenseFinder model name |
-| `deffinder_gene_name` | DefenseFinder gene name |
-| `deffinder_system` | DefenseFinder system identifier |
-| `deffinder_hit_i_eval` | DefenseFinder e-value for hit |
-| `deffinder_hit_profile_cov` | Profile coverage |
-| `deffinder_hit_seq_cov` | Sequence coverage |
-| `deffinder_hit_status` | Hit status |
-| `deffinder_sys_wholeness` | System completeness |
-| `deffinder_hit_score` | DefenseFinder hit score |
+| `defensefinder_model` | DefenseFinder model name |
+| `defensefinder_gene_name` | DefenseFinder gene name |
+| `defensefinder_system` | DefenseFinder system identifier |
+| `defensefinder_hit_i_eval` | DefenseFinder e-value for hit |
+| `defensefinder_hit_profile_cov` | Profile coverage |
+| `defensefinder_hit_seq_cov` | Sequence coverage |
+| `defensefinder_hit_status` | Hit status |
+| `defensefinder_sys_wholeness` | System completeness |
+| `defensefinder_hit_score` | DefenseFinder hit score |
 | `padloc_system` | PADLOC system identifier |
 | `padloc_gene_name` | PADLOC gene name |
 | `padloc_evalue` | PADLOC full sequence e-value |
@@ -142,7 +142,7 @@ The tool requires three inputs:
 | `end` | End coordinate (PADLOC or Bakta) |
 | `strand` | Strand (+ / -) |
 
-### 2. Consolidated Summary Table (`deffinder_padloc_consolidated.tsv`)
+### 2. Consolidated Summary Table (`defensefinder_padloc_consolidated.tsv`)
 
 | Column | Description |
 |--------|-------------|

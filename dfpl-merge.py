@@ -27,11 +27,11 @@ def main():
     args = build_parser().parse_args()
 
     # load + tidy
-    deffinder_rows = tidy_deffinder_genes(load_deffinder_genes(args.d))
+    defensefinder_rows = tidy_defensefinder_genes(load_defensefinder_genes(args.d))
     padloc_rows = tidy_padloc(load_padloc(args.p))
     bakta_rows = load_bakta_clean(args.b)
 
-    merged = merge_all(deffinder_rows, padloc_rows, bakta_records=bakta_rows)
+    merged = merge_all(defensefinder_rows, padloc_rows, bakta_records=bakta_rows)
 
     # after merging, format values
     for r in merged:
@@ -53,20 +53,20 @@ def main():
                 except ValueError:
                     pass
 
-    outpath = args.o / "deffinder_padloc_merged.tsv"
+    outpath = args.o / "defensefinder_padloc_merged.tsv"
     # define field order with coordinates last
     if merged:
         cols = [c for c in merged[0].keys() if c not in ("start", "end", "strand")]
         field_order = cols + ["start", "end", "strand"]
     else:
-        field_order = ["locus_tag", "deffinder_model", "deffinder_gene_name", "deffinder_system", "deffinder_hit_i_eval", 
-                        "deffinder_hit_profile_cov", "deffinder_hit_seq_cov", "deffinder_hit_status", "deffinder_sys_wholeness",
-                        "deffinder_hit_score", "sample_name", "padloc_system", "padloc_gene_name", "padloc_evalue",
+        field_order = ["locus_tag", "defensefinder_model", "defensefinder_gene_name", "defensefinder_system", "defensefinder_hit_i_eval", 
+                        "defensefinder_hit_profile_cov", "defensefinder_hit_seq_cov", "defensefinder_hit_status", "defensefinder_sys_wholeness",
+                        "defensefinder_hit_score", "sample_name", "padloc_system", "padloc_gene_name", "padloc_evalue",
                         "padloc_domain_ievalue", "padloc_target_cov", "padloc_hmm_cov", "start", "end", "strand"]
     write_tsv(merged, outpath, field_order=field_order)
 
     summary = make_summary_table(merged)
-    summary_path = args.o / "deffinder_padloc_consolidated.tsv"
+    summary_path = args.o / "defensefinder_padloc_consolidated.tsv"
     write_tsv(summary, summary_path, field_order=["locus_tag", "source_type", "consolidated_gene", "consolidated_system"])
     
 
@@ -75,11 +75,11 @@ def build_parser():
     p = argparse.ArgumentParser(
         prog="df-padloc-merge", 
         description="Merge, consolidate and resolve DefenseFinder and Padloc outputs",
-        epilog="Example: dfpl-merge.py -d Deffinder.tsv -p PADLOC.tsv -b bakta.tsv -o out",
+        epilog="Example: dfpl-merge.py -d defensefinder.tsv -p PADLOC.tsv -b bakta.tsv -o out",
         add_help=False)
     
     req = p.add_argument_group("Required arguments")
-    req.add_argument("-d", metavar="DEFFINDER_TSV", type=Path, required=True, help="DefenseFinder genes table")
+    req.add_argument("-d", metavar="DEFENSEFINDER_TSV", type=Path, required=True, help="DefenseFinder genes table")
     req.add_argument("-p", metavar="PADLOC_TSV", type=Path, required=True, help="PADLOC results table")
     req.add_argument("-b", metavar="BAKTA_TSV", type=Path, required=True, help="Bakta annotations")
     req.add_argument("-o", metavar="OUTDIR", type=Path, required=True, help="Output directory")
@@ -107,7 +107,7 @@ def read_table(path, required=None, keep=None):
 
 
 # ---- specific loaders (thin wrappers) ----
-def load_deffinder_genes(path):
+def load_defensefinder_genes(path):
     keep = ["hit_id", "gene_name", "sys_id", "hit_i_eval", "hit_profile_cov", "hit_seq_cov", "model_fqn", "hit_status", "sys_wholeness", "hit_score"]
     return read_table(path, required=keep, keep=keep)
 
@@ -118,17 +118,17 @@ def load_padloc(path):
 
 
 # ---- clean Defensefinder columns ----
-def tidy_deffinder_genes(rows, keep_only_mapped=False):
+def tidy_defensefinder_genes(rows, keep_only_mapped=False):
     ren = {
         "hit_id": "locus_tag",
-        "model_fqn": "deffinder_model",
-        "gene_name": "deffinder_gene_name",
-        "sys_id": "deffinder_system",
-        "hit_i_eval": "deffinder_hit_i_eval",
-        "hit_profile_cov": "deffinder_hit_profile_cov",
-        "hit_seq_cov": "deffinder_hit_seq_cov",
-        "hit_status": "deffinder_hit_status",
-        "sys_wholeness": "deffinder_sys_wholeness",
+        "model_fqn": "defensefinder_model",
+        "gene_name": "defensefinder_gene_name",
+        "sys_id": "defensefinder_system",
+        "hit_i_eval": "defensefinder_hit_i_eval",
+        "hit_profile_cov": "defensefinder_hit_profile_cov",
+        "hit_seq_cov": "defensefinder_hit_seq_cov",
+        "hit_status": "defensefinder_hit_status",
+        "sys_wholeness": "defensefinder_sys_wholeness",
         "hit_score": "definder_hit_score"
     }
 
@@ -267,12 +267,12 @@ def load_bakta_clean(path):
     return out
 
 # ---- merge DF + Padloc (+ Bakta coords) ----
-def merge_all(deffinder_rows, padloc_rows, bakta_records=None):
-    deffinder = pd.DataFrame(deffinder_rows)
+def merge_all(defensefinder_rows, padloc_rows, bakta_records=None):
+    defensefinder = pd.DataFrame(defensefinder_rows)
     padloc = pd.DataFrame(padloc_rows)
 
     # outer merge on locus_tag 
-    merged = pd.merge(deffinder, padloc, on="locus_tag", how="outer")
+    merged = pd.merge(defensefinder, padloc, on="locus_tag", how="outer")
 
     # backfill with Bakta coords if provided
     if bakta_records is not None:
@@ -297,11 +297,11 @@ def make_summary_table(merged_records):
     df = pd.DataFrame(merged_records)
 
     def source_type(row):
-        has_deffinder = row.get("deffinder_gene_name") not in (None, "NA", "")
+        has_defensefinder = row.get("defensefinder_gene_name") not in (None, "NA", "")
         has_padloc = row.get("padloc_gene_name") not in (None, "NA", "")
-        if has_deffinder and has_padloc:
+        if has_defensefinder and has_padloc:
             return "Both"
-        elif has_deffinder:
+        elif has_defensefinder:
             return "DefenseFinder only"
         elif has_padloc:
             return "Padloc only"
@@ -312,11 +312,11 @@ def make_summary_table(merged_records):
     summary["locus_tag"] = df["locus_tag"]
     summary["source_type"] = df.apply(source_type, axis=1)
     summary["consolidated_gene"] = df.apply(
-        lambda r: r["deffinder_gene_name"] if r["deffinder_gene_name"] not in (None, "NA", "") else r["padloc_gene_name"],
+        lambda r: r["defensefinder_gene_name"] if r["defensefinder_gene_name"] not in (None, "NA", "") else r["padloc_gene_name"],
         axis=1,
     )
     summary["consolidated_system"] = df.apply(
-        lambda r: r["deffinder_system"] if r["deffinder_system"] not in (None, "NA", "") else r["padloc_system"],
+        lambda r: r["defensefinder_system"] if r["defensefinder_system"] not in (None, "NA", "") else r["padloc_system"],
         axis=1,
     )
 
