@@ -54,7 +54,6 @@ Required arguments:
 
 Optional arguments:
   -h, --help                    Show this help and exit
-  -v, --verbose                 Verbose logs
 ```
 
 ### Example
@@ -119,31 +118,31 @@ The tool requires three inputs:
 
 ## Outputs
 
-### 1. Full Merged Table (`df_padloc_merged.tsv`)
+### 1. Full Merged Table (`deffinder_padloc_merged.tsv`)
 
 | Column | Description |
 |--------|-------------|
 | `locus_tag` | Unique gene identifier |
-| `df_model` | DefenseFinder model name |
-| `df_gene_name` | DefenseFinder gene name |
-| `df_system` | DefenseFinder system identifier |
-| `df_hit_i_eval` | DefenseFinder e-value for hit |
-| `df_hit_profile_cov` | Profile coverage |
-| `df_hit_seq_cov` | Sequence coverage |
-| `df_hit_status` | Hit status |
-| `df_sys_wholeness` | System completeness |
-| `df_hit_score` | DefenseFinder hit score |
-| `pl_system` | PADLOC system identifier |
-| `pl_gene_name` | PADLOC gene name |
-| `pl_evalue` | PADLOC full sequence e-value |
-| `pl_domain_ievalue` | PADLOC domain e-value |
-| `pl_target_cov` | PADLOC target coverage |
-| `pl_hmm_cov` | PADLOC HMM coverage |
+| `deffinder_model` | DefenseFinder model name |
+| `deffinder_gene_name` | DefenseFinder gene name |
+| `deffinder_system` | DefenseFinder system identifier |
+| `deffinder_hit_i_eval` | DefenseFinder e-value for hit |
+| `deffinder_hit_profile_cov` | Profile coverage |
+| `deffinder_hit_seq_cov` | Sequence coverage |
+| `deffinder_hit_status` | Hit status |
+| `deffinder_sys_wholeness` | System completeness |
+| `deffinder_hit_score` | DefenseFinder hit score |
+| `padloc_system` | PADLOC system identifier |
+| `padloc_gene_name` | PADLOC gene name |
+| `padloc_evalue` | PADLOC full sequence e-value |
+| `padloc_domain_ievalue` | PADLOC domain e-value |
+| `padloc_target_cov` | PADLOC target coverage |
+| `padloc_hmm_cov` | PADLOC HMM coverage |
 | `start` | Start coordinate (PADLOC or Bakta) |
 | `end` | End coordinate (PADLOC or Bakta) |
 | `strand` | Strand (+ / -) |
 
-### 2. Consolidated Summary Table (`df_padloc_consolidated.tsv`)
+### 2. Consolidated Summary Table (`deffinder_padloc_consolidated.tsv`)
 
 | Column | Description |
 |--------|-------------|

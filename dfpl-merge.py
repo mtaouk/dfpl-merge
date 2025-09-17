@@ -33,6 +33,26 @@ def main():
 
     merged = merge_all(deffinder_rows, padloc_rows, bakta_records=bakta_rows)
 
+    # after merging, format values
+    for r in merged:
+        # format e-values nicely
+        for col in ("padloc_domain_ievalue", "padloc_evalue"):
+            val = r.get(col)
+            if val not in (None, "NA", ""):
+                try:
+                    r[col] = f"{float(val):.2e}"
+                except ValueError:
+                    pass
+
+        # force start/end to full integer strings
+        for col in ("start", "end"):
+            val = r.get(col)
+            if val not in (None, "NA", ""):
+                try:
+                    r[col] = str(int(float(val)))
+                except ValueError:
+                    pass
+
     outpath = args.o / "deffinder_padloc_merged.tsv"
     # define field order with coordinates last
     if merged:
@@ -66,7 +86,6 @@ def build_parser():
    
     opt = p.add_argument_group("Optional arguments")
     opt.add_argument("-h", "--help", action="help", help="Show this help and exit")
-    opt.add_argument("-v", "--verbose", action="store_true", help="Verbose logs")
     return p
 
 
