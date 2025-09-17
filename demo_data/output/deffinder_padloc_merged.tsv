@@ -1,9 +1,0 @@
-locus_tag	deffinder_model	deffinder_gene_name	deffinder_system	deffinder_hit_i_eval	deffinder_hit_profile_cov	deffinder_hit_seq_cov	deffinder_hit_status	deffinder_sys_wholeness	definder_hit_score	padloc_system	padloc_gene_name	padloc_evalue	padloc_domain_ievalue	padloc_target_cov	padloc_hmm_cov	start	end	strand
-KEBBGD_00673	NA	NA	NA	NA	NA	NA	NA	NA	NA	PDC-S07	PDC-S07	4.80e-42	5.50e-42	0.955	0.948	728055	728459	+
-KEBBGD_02232	NA	NA	NA	NA	NA	NA	NA	NA	NA	PDC-S11	PDC-S11	1.70e-133	1.80e-133	0.989	0.988	2337778	2338836	+
-KEBBGD_02648	NA	NA	NA	NA	NA	NA	NA	NA	NA	PDC-S07	PDC-S07	3.50e-42	4.10e-42	0.941	0.948	2798455	2798862	+
-KEBBGD_02862	DefenseFinder_1	PD-T4-8	PD-T4-8	5.2e-188	0.993	1.000	mandatory	1.000	623.000	shedu	SduA	4.10e-226	4.60e-226	0.998	0.998	3021891	3023111	-
-KEBBGD_03140	NA	NA	NA	NA	NA	NA	NA	NA	NA	PDC-S32	PDC-S32	4.80e-30	6.60e-30	0.954	0.961	3287965	3288873	+
-KEBBGD_03153	DefenseFinder_2	HP	FS_HP	4.1e-98	0.994	0.994	mandatory	1.000	324.200	NA	NA	NA	NA	NA	NA	3298979	3299506	-
-KEBBGD_03189	NA	NA	NA	NA	NA	NA	NA	NA	NA	SoFic	SoFic	3.30e-10	3.70e-10	0.856	0.62	3335103	3335894	-
-KEBBGD_04596	DefenseFinder_1	Sp_dGTPase	dGTPase	1.5e-223	0.996	0.991	mandatory	1.000	740.500	dXTPase	dGTPase	2.20e-141	2.50e-141	0.98	0.894	4857623	4858999	+

@@ -1,9 +1,0 @@
-locus_tag	source_type	consolidated_gene	consolidated_system
-KEBBGD_00673	Padloc only	PDC-S07	PDC-S07
-KEBBGD_02232	Padloc only	PDC-S11	PDC-S11
-KEBBGD_02648	Padloc only	PDC-S07	PDC-S07
-KEBBGD_02862	Both	PD-T4-8	PD-T4-8
-KEBBGD_03140	Padloc only	PDC-S32	PDC-S32
-KEBBGD_03153	DefenseFinder only	HP	FS_HP
-KEBBGD_03189	Padloc only	SoFic	SoFic
-KEBBGD_04596	Both	Sp_dGTPase	dGTPase
