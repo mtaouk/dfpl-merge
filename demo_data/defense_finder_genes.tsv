@@ -1,0 +1,4 @@
+replicon	hit_id	gene_name	hit_pos	model_fqn	sys_id	sys_loci	locus_num	sys_wholeness	sys_score	sys_occ	hit_gene_ref	hit_status	hit_seq_len	hit_i_eval	hit_score	hit_profile_cov	hit_seq_cov	hit_begin_match	hit_end_match	counterpart	used_in
+DMG2407057	KEBBGD_02862	PD-T4-8__PD-T4-8	2776	defense-finder-models/DefenseFinder_1/PD-T4-8/PD-T4-8	DMG2407057_PD-T4-8_1	1	1	1.000	1.000	1	PD-T4-8__PD-T4-8	mandatory	406	5.2e-188	623.000	0.993	1.000	1	406		
+DMG2407057	KEBBGD_04596	dGTPase__Sp_dGTPase	4458	defense-finder-models/DefenseFinder_1/dGTPase/dGTPase	DMG2407057_dGTPase_2	1	1	1.000	1.000	1	dGTPase__Sp_dGTPase	mandatory	458	1.5e-223	740.500	0.996	0.991	5	458		
+DMG2407057	KEBBGD_03153	FS_HP__HP	3062	defense-finder-models/DefenseFinder_2/FS_HP/FS_HP	DMG2407057_FS_HP_3	1	1	1.000	1.000	1	FS_HP__HP	mandatory	175	4.1e-98	324.200	0.994	0.994	1	174		
