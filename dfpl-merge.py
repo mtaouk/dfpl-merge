@@ -19,6 +19,7 @@ not, see <http://www.gnu.org/licenses/>.
 import argparse # parse command-line flags
 import csv # for reading the input files
 from pathlib import Path # nicer file paths than raw strings 
+import sys # for writing errors
 import pandas as pd # aparently need this for the merging of dataframes
 
 
@@ -27,9 +28,9 @@ def main():
     args = build_parser().parse_args()
 
     # load + tidy
-    defensefinder_rows = tidy_defensefinder_genes(load_defensefinder_genes(args.d))
-    padloc_rows = tidy_padloc(load_padloc(args.p))
-    bakta_rows = load_bakta_clean(args.b)
+    defensefinder_rows = read_tidy_defensefinder(args.d)
+    padloc_rows = read_tidy_padloc(args.p)
+    bakta_rows = read_tidy_bakta(args.b) if args.b else None
 
     merged = merge_all(defensefinder_rows, padloc_rows, bakta_records=bakta_rows)
 
@@ -81,10 +82,10 @@ def build_parser():
     req = p.add_argument_group("Required arguments")
     req.add_argument("-d", metavar="DEFENSEFINDER_TSV", type=Path, required=True, help="DefenseFinder genes table")
     req.add_argument("-p", metavar="PADLOC_TSV", type=Path, required=True, help="PADLOC results table")
-    req.add_argument("-b", metavar="BAKTA_TSV", type=Path, required=True, help="Bakta annotations")
     req.add_argument("-o", metavar="OUTDIR", type=Path, required=True, help="Output directory")
    
     opt = p.add_argument_group("Optional arguments")
+    opt.add_argument("-b", metavar="BAKTA_TSV", type=Path, required=False, help="Bakta annotations (optional)")
     opt.add_argument("-h", "--help", action="help", help="Show this help and exit")
     return p
 
@@ -106,19 +107,13 @@ def read_table(path, required=None, keep=None):
     return rows
 
 
-# ---- specific loaders (thin wrappers) ----
-def load_defensefinder_genes(path):
-    keep = ["hit_id", "gene_name", "sys_id", "hit_i_eval", "hit_profile_cov", "hit_seq_cov", "model_fqn", "hit_status", "sys_wholeness", "hit_score"]
-    return read_table(path, required=keep, keep=keep)
-
-def load_padloc(path):
-    required = ["system","target.name","start","end","strand"]
-    keep = required + ["protein.name", "full.seq.E.value","domain.iE.value","target.coverage","hmm.coverage"]
-    return read_table(path, required=required, keep=keep)
-
-
 # ---- clean Defensefinder columns ----
-def tidy_defensefinder_genes(rows, keep_only_mapped=False):
+def read_tidy_defensefinder(path, keep_only_mapped=True):
+    keep = ["hit_id", "gene_name", "sys_id", "hit_i_eval", "hit_profile_cov", "hit_seq_cov", "model_fqn", "hit_status", "sys_wholeness", "hit_score"]
+    rows = read_table(path, keep, keep)
+    if not rows:
+        sys.exit("Error: DEFENSEFINDER_TSV file is empty")
+
     ren = {
         "hit_id": "locus_tag",
         "model_fqn": "defensefinder_model",
@@ -170,7 +165,13 @@ def tidy_defensefinder_genes(rows, keep_only_mapped=False):
     return out
 
 # ---- clean Padloc columns ----
-def tidy_padloc(rows, keep_only_mapped=False):
+def read_tidy_padloc(path, keep_only_mapped=True):
+    required = ["system","target.name","start","end","strand"]
+    keep = required + ["protein.name", "full.seq.E.value","domain.iE.value","target.coverage","hmm.coverage"]
+    rows = read_table(path, required, keep)
+    if not rows:
+        sys.exit("Error: PADLOC_TSV file is empty")
+
     ren = {
         "target.name": "locus_tag",
         "system": "padloc_system",
@@ -218,7 +219,7 @@ def tidy_padloc(rows, keep_only_mapped=False):
     return out
 
 # ---- Bakta TSV reader and cleaner ----
-def load_bakta_clean(path):
+def read_tidy_bakta(path):
     """
     Read a Bakta 'Annotated with Bakta' TSV (with a commented header),
     keep only selected columns, rename them, and return CDS rows as a list of dicts.
@@ -256,14 +257,9 @@ def load_bakta_clean(path):
                 continue  # keep only coding sequences
             # keep only columns in ren and rename them
             rec = {ren[src]: row[src] for src in ren}
-            # cast coords
-            try:
-                rec["start"] = int(rec["start"])
-                rec["end"] = int(rec["end"])
-            except Exception:
-                pass
             out.append(rec)
-
+    if not out:
+        sys.exit("Error: BAKTA_TSV file is empty")
     return out
 
 # ---- merge DF + Padloc (+ Bakta coords) ----
