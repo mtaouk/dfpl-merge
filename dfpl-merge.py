@@ -22,7 +22,6 @@ from pathlib import Path # nicer file paths than raw strings
 import sys # for writing errors
 import pandas as pd # aparently need this for the merging of dataframes
 
-
 # ---- main ----
 def main():
     args = build_parser().parse_args()
@@ -55,6 +54,7 @@ def main():
                     pass
 
     outpath = args.o / "defensefinder_padloc_merged.tsv"
+    
     # define field order with coordinates last
     if merged:
         cols = [c for c in merged[0].keys() if c not in ("start", "end", "strand")]
@@ -74,19 +74,23 @@ def main():
 # ----argument parser ---- 
 def build_parser():
     p = argparse.ArgumentParser(
-        prog="df-padloc-merge", 
+        prog="df-padloc-merge",
         description="Merge, consolidate and resolve DefenseFinder and Padloc outputs",
         epilog="Example: dfpl-merge.py -d defensefinder.tsv -p PADLOC.tsv -b bakta.tsv -o out",
-        add_help=False)
-    
-    req = p.add_argument_group("Required arguments")
-    req.add_argument("-d", metavar="DEFENSEFINDER_TSV", type=Path, required=True, help="DefenseFinder genes table")
-    req.add_argument("-p", metavar="PADLOC_TSV", type=Path, required=True, help="PADLOC results table")
-    req.add_argument("-o", metavar="OUTDIR", type=Path, required=True, help="Output directory")
-   
-    opt = p.add_argument_group("Optional arguments")
-    opt.add_argument("-b", metavar="BAKTA_TSV", type=Path, required=False, help="Bakta annotations (optional)")
-    opt.add_argument("-h", "--help", action="help", help="Show this help and exit")
+        add_help=False
+    )
+
+    # required arguments
+    p.add_argument("-d", metavar="DEFENSEFINDER_TSV", type=Path, required=True, help="DefenseFinder genes table (required)")
+    p.add_argument("-p", metavar="PADLOC_TSV", type=Path, required=True, help="PADLOC results table (required)")
+    p.add_argument("-o", metavar="OUTDIR", type=Path, required=True, help="Output directory (required)")
+
+    # optional argument
+    p.add_argument("-b", metavar="BAKTA_TSV", type=Path, required=False, help="Bakta annotations (optional)")
+    # version flag that works standalone
+    p.add_argument("-v", "--version", action="version", version="v0.1beta")
+    p.add_argument("-h", "--help", action="help", help="Show this help and exit")
+
     return p
 
 
