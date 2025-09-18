@@ -82,20 +82,20 @@ python dfpl-merge.py \
 The tool requires three inputs:
 
 1.  **DefenseFinder TSV** (`-d`)
-    -   defense_finder_genes.tsv output tsv from DefenseFinder.\
+    -   defense_finder_genes.tsv output tsv from DefenseFinder.
     -   Must include columns: `hit_id`, `gene_name`, `sys_id`,
         `hit_i_eval`, `hit_profile_cov`, `hit_seq_cov`, `model_fqn`,
         `hit_status`, `sys_wholeness`, `hit_score`.
 2.  **PADLOC CSV** (`-p`)
-    -   Standard output csv from PADLOC.\
+    -   Standard output csv from PADLOC.
     -   Must include columns: `system`, `target.name`, `target.name`,
         `protein.name`, `full.seq.E.value`, `domain.iE.value`,
         `target.coverage`, `hmm.coverage`, `start`, `end`, `strand`.
 3.  **Bakta annotation TSV** (`-b`) (Optional)
-    -   Genomic annotations with coding sequences.\
+    -   Genomic annotations with coding sequences.
     -   Must contain a commented header line beginning with
         `#Sequence ...` and columns: `Locus Tag`, `Start`, `End`,
-        `Strand`.\
+        `Strand`.
     -   If this is not provided, it just means that any genes identified
         by DefenseFinder and not PADLOC will not have any coordinates
         filled in for them.
@@ -105,7 +105,7 @@ The tool requires three inputs:
 ## Important
 
 -   This tool **only works if you have used the same assembly as input
-    for both `DefenseFinder`** **and `PADLOC`** .\
+    for both** `DefenseFinder` **and** `PADLOC`.
 -   `Bakta` annotated assemblies are preferred.
 
 ------------------------------------------------------------------------
@@ -114,27 +114,27 @@ The tool requires three inputs:
 
 1.  **Load and clean inputs:**
     -   DefenseFinder: rename columns, extract gene/system names,
-        simplify model identifiers.\
+        simplify model identifiers.
     -   PADLOC: rename columns, normalise strand, cast coordinates to
-        integers.\
+        integers.
     -   Bakta: parse CDS records, retain only essential coordinates. (If
         provided).
 2.  **Merge tables:**
     -   Outer merge on `locus_tag` to include all entries from both
-        DefenseFinder and PADLOC.\
+        DefenseFinder and PADLOC.
     -   Coordinates from PADLOC are used if present; otherwise, Bakta
         coordinates backfill missing values. If not Bakta table is
         provided, genes that are identified with DefenseFinder only will
         have missing values for `Start`, `End`, and `Strand`.
 3.  **Generate outputs:**
     -   **Full merged table:** key columns from DefenseFinder and
-        PADLOC, plus unified `start`, `end`, `strand`.\
+        PADLOC, plus unified `start`, `end`, `strand`.
     -   **Consolidated summary table:**
-        -   `locus_tag`\
+        -   `locus_tag`
         -   `source_type` → `"DefenseFinder only"`, `"PADLOC only"`, or
-            `"both"`\
+            `"both"`
         -   `consolidated_gene` → DefenseFinder gene name if present,
-            otherwise PADLOC gene name\
+            otherwise PADLOC gene name
         -   `consolidated_system` → DefenseFinder system name if
             present, otherwise PADLOC system
 
