@@ -92,10 +92,10 @@ The tool requires three inputs:
         `protein.name`, `full.seq.E.value`, `domain.iE.value`,
         `target.coverage`, `hmm.coverage`, `start`, `end`, `strand`.
 3.  **Bakta annotation TSV** (`-b`) (Optional)
-    -   Genomic annotations with coding sequences.
+    -   Genomic annotations with coding sequences.\
     -   Must contain a commented header line beginning with
         `#Sequence ...` and columns: `Locus Tag`, `Start`, `End`,
-        `Strand`.
+        `Strand`.\
     -   If this is not provided, it just means that any genes identified
         by DefenseFinder and not PADLOC will not have any coordinates
         filled in for them.
@@ -105,7 +105,7 @@ The tool requires three inputs:
 ## Important
 
 -   This tool **only works if you have used the same assembly as input
-    for both `DefenseFinder`** **and `PADLOC`** .
+    for both `DefenseFinder`** **and `PADLOC`** .\
 -   `Bakta` annotated assemblies are preferred.
 
 ------------------------------------------------------------------------
