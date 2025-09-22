@@ -86,12 +86,17 @@ The tool requires three inputs:
     -   Must include columns: `hit_id`, `gene_name`, `sys_id`,
         `hit_i_eval`, `hit_profile_cov`, `hit_seq_cov`, `model_fqn`,
         `hit_status`, `sys_wholeness`, `hit_score`.
-2.  **PADLOC CSV** (`-p`)
+    -    Recommended usage of Defense-finder:
+         `defense-finder run annotated_genome.faa -o output_dir`
+3.  **PADLOC CSV** (`-p`)
     -   Standard output csv from PADLOC.
     -   Must include columns: `system`, `target.name`, `target.name`,
         `protein.name`, `full.seq.E.value`, `domain.iE.value`,
         `target.coverage`, `hmm.coverage`, `start`, `end`, `strand`.
-3.  **Bakta annotation TSV** (`-b`) (Optional)
+    -    `Recommended usage of Defense-finder:
+         `defense-finder run annotated_genome.faa -o output_dir`
+       
+4.  **Bakta annotation TSV** (`-b`) (Optional)
     -   Genomic annotations with coding sequences.
     -   Must contain a commented header line beginning with
         `#Sequence ...` and columns: `Locus Tag`, `Start`, `End`,
