@@ -2,22 +2,23 @@
 
 `dfpl-merge` is a command-line tool for merging, consolidating, and
 resolving DefenseFinder and PADLOC results with genomic coordinates from
-Bakta annotations which helps for visualisation. It produces both a full
-merged table and a consolidated summary table, simplifying downstream
-analyses of defence systems in prokaryotic genomes.
+Bakta annotations which helps for visualization and other exploratory
+work. It produces both a full merged table and a consolidated summary
+table, simplifying downstream analyses of defense systems in prokaryotic
+genomes.
 
 ------------------------------------------------------------------------
 
 ## Features
 
 -   Merges **DefenseFinder** and **PADLOC** outputs on `locus_tag`.
--   Fills in missing genomic coordinates using **Bakta CDS
-    annotations**.
+-   Fills in missing genomic coordinates using **Bakta CDS annotations**
+    (if provided). Note: input must be in the **Bakta** tsv format, but
+    **Prokka** annotations can be input if first transformed to the
+    correct format (see below).
 -   Consolidates gene and system names into a single, harmonised set.
 -   Produces both a full merged table and a summary table of source and
     consolidated information.
--   Handles strand normalisation and coordinate type casting
-    automatically.
 
 ------------------------------------------------------------------------
 
@@ -79,35 +80,31 @@ python dfpl-merge.py \
 
 ## Inputs
 
-The tool requires three inputs:
+The tool accepts three inputs:
 
 1.  **DefenseFinder TSV** (`-d`)
     -   defense_finder_genes.tsv output tsv from DefenseFinder.
     -   Must include columns: `hit_id`, `gene_name`, `sys_id`,
         `hit_i_eval`, `hit_profile_cov`, `hit_seq_cov`, `model_fqn`,
         `hit_status`, `sys_wholeness`, `hit_score`.
-    -    Recommended usage of Defense-finder:
-         ```
-         defense-finder run annotated_genome.faa -o output_dir
-         ```
-3.  **PADLOC CSV** (`-p`)
+    -   Recommended usage of Defense-finder:
+        `defense-finder run annotated_genome.faa -o output_dir`
+2.  **PADLOC CSV** (`-p`)
     -   Standard output csv from PADLOC.
     -   Must include columns: `system`, `target.name`, `target.name`,
         `protein.name`, `full.seq.E.value`, `domain.iE.value`,
         `target.coverage`, `hmm.coverage`, `start`, `end`, `strand`.
-    -    Recommended usage of Defense-finder:
-         ```
-         padloc --faa annotated_genome.faa --gff annotated_genome.gff3
-         ```
-       
-4.  **Bakta annotation TSV** (`-b`) (Optional)
+    -   Recommended usage of Defense-finder:
+        `padloc --faa annotated_genome.faa --gff annotated_genome.gff3`
+3.  **Bakta annotation TSV** (`-b`) (Optional)
     -   Genomic annotations with coding sequences.
     -   Must contain a commented header line beginning with
         `#Sequence ...` and columns: `Locus Tag`, `Start`, `End`,
         `Strand`.
     -   If this is not provided, it just means that any genes identified
         by DefenseFinder and not PADLOC will not have any coordinates
-        filled in for them.
+        filled in for them. Prokka annotations can be input if they are
+        restructured into this format first.
 
 ------------------------------------------------------------------------
 
