@@ -1,11 +1,12 @@
 # dfpl-merge
 
 `dfpl-merge` is a command-line tool for merging, consolidating, and
-resolving DefenseFinder and PADLOC results with genomic coordinates from
-Bakta annotations which helps for visualization and other exploratory
-work. It produces both a full merged table and a consolidated summary
-table, simplifying downstream analyses of defense systems in prokaryotic
-genomes.
+resolving [DefenseFinder](https://github.com/mdmparis/defense-finder)
+and [PADLOC](https://github.com/padlocbio/padloc) results with genomic
+coordinates from Bakta annotations which helps for visualization and
+other exploratory work. It produces both a full merged table and a
+consolidated summary table, simplifying downstream analyses of defense
+systems in prokaryotic genomes.
 
 ------------------------------------------------------------------------
 
