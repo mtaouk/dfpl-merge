@@ -31,7 +31,12 @@ def main():
     padloc_rows = read_tidy_padloc(args.p)
     bakta_rows = read_tidy_bakta(args.b) if args.b else None
 
+    # write merged
     merged = merge_all(defensefinder_rows, padloc_rows, bakta_records=bakta_rows)
+
+    #add ID in from args
+    for r in merged:
+        r["ID"] = args.x
 
     # after merging, format values
     for r in merged:
@@ -53,22 +58,22 @@ def main():
                 except ValueError:
                     pass
 
-    outpath = args.o / "defensefinder_padloc_merged.tsv"
+    merged_path = args.o / f"{args.x}_merged.tsv"
     
-    # define field order with coordinates last
-    if merged:
-        cols = [c for c in merged[0].keys() if c not in ("start", "end", "strand")]
-        field_order = cols + ["start", "end", "strand"]
-    else:
-        field_order = ["locus_tag", "defensefinder_model", "defensefinder_gene_name", "defensefinder_system", "defensefinder_hit_i_eval", 
-                        "defensefinder_hit_profile_cov", "defensefinder_hit_seq_cov", "defensefinder_hit_status", "defensefinder_sys_wholeness",
-                        "defensefinder_hit_score", "sample_name", "padloc_system", "padloc_gene_name", "padloc_evalue",
-                        "padloc_domain_ievalue", "padloc_target_cov", "padloc_hmm_cov", "start", "end", "strand"]
-    write_tsv(merged, outpath, field_order=field_order)
+    write_tsv(merged, merged_path, field_order=["ID", "locus_tag", "defensefinder_model", "defensefinder_gene_name", "defensefinder_system", "defensefinder_hit_i_eval", 
+                        "defensefinder_hit_profile_cov", "defensefinder_hit_seq_cov", "defensefinder_hit_status", "defensefinder_sys_wholeness", "padloc_system", "padloc_gene_name", "padloc_evalue",
+                        "padloc_domain_ievalue", "padloc_target_cov", "padloc_hmm_cov", "start", "end", "strand"])
+
+    # write summary
 
     summary = make_summary_table(merged)
-    summary_path = args.o / "defensefinder_padloc_consolidated.tsv"
-    write_tsv(summary, summary_path, field_order=["locus_tag", "source_type", "consolidated_gene", "consolidated_system"])
+
+    for r in summary:
+        r["ID"] = args.x
+
+    summary_path = args.o / f"{args.x}_consolidated.tsv"
+    
+    write_tsv(summary, summary_path, field_order=["ID", "source_type", "consolidated_gene", "consolidated_system"])
     
 
 # ----argument parser ---- 
@@ -83,6 +88,7 @@ def build_parser():
     # required arguments
     p.add_argument("-d", metavar="DEFENSEFINDER_TSV", type=Path, required=True, help="DefenseFinder genes table (required)")
     p.add_argument("-p", metavar="PADLOC_TSV", type=Path, required=True, help="PADLOC results table (required)")
+    p.add_argument("-x", metavar="ID", required=True, help="Genome ID / prefix for outputs (required)")
     p.add_argument("-o", metavar="OUTDIR", type=Path, required=True, help="Output directory (required)")
 
     # optional argument
@@ -205,7 +211,6 @@ def read_tidy_padloc(path, keep_only_mapped=True):
         for k in ("start", "end"):
             if k in r:
                 try:
-                    # sometimes PADLOC writes floats-as-strings; be chill
                     r[k] = int(float(r[k]))
                 except Exception:
                     pass

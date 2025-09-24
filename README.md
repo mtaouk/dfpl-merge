@@ -61,6 +61,7 @@ pip install pandas
 options:
   -d DEFENSEFINDER_TSV  DefenseFinder genes table (required)
   -p PADLOC_TSV         PADLOC results table (required)
+  -x ID                 Genome ID / prefix for outputs (required)
   -o OUTDIR             Output directory (required)
   -b BAKTA_TSV          Bakta annotations (optional)
   -v, --version         show program's version number and exit
@@ -71,17 +72,18 @@ options:
 
 ``` bash
 python dfpl-merge.py \
-  -d path/to/defensefinder.tsv \
-  -p path/to/padloc.tsv \
-  -b path/to/bakta.tsv \
-  -o path/to/output_dir \
+  -d demo_data/demo_defense.tsv \
+  -p demo_data/demo_padloc.csv \
+  -b demo_data/demo_bakta.tsv \
+  -x example_genome \
+  -o demo_data/output \
 ```
 
 ------------------------------------------------------------------------
 
 ## Inputs
 
-The tool accepts three inputs:
+The tool accepts these inputs:
 
 1.  **DefenseFinder TSV** (`-d`)
     -   defense_finder_genes.tsv output tsv from DefenseFinder.
@@ -137,7 +139,7 @@ The tool accepts three inputs:
     -   **Full merged table:** key columns from DefenseFinder and
         PADLOC, plus unified `start`, `end`, `strand`.
     -   **Consolidated summary table:**
-        -   `locus_tag`
+        -   `ID`
         -   `source_type` → `"DefenseFinder only"`, `"PADLOC only"`, or
             `"both"`
         -   `consolidated_gene` → DefenseFinder gene name if present,
@@ -153,6 +155,7 @@ The tool accepts three inputs:
 
 | Column                          | Description                        |
 |---------------------------------|------------------------------------|
+| `ID`                            | Genome ID                          |
 | `locus_tag`                     | Unique gene identifier             |
 | `defensefinder_model`           | DefenseFinder model name           |
 | `defensefinder_gene_name`       | DefenseFinder gene name            |
@@ -177,7 +180,7 @@ The tool accepts three inputs:
 
 | Column                | Description                                             |
 |----------------------------|--------------------------------------------|
-| `locus_tag`           | Unique gene identifier                                  |
+| `ID`                  | Genome ID                                               |
 | `source_type`         | `"DefenseFinder only"`, `"PADLOC only"`, or `"both"`    |
 | `consolidated_gene`   | Unified gene name (prefer DefenseFinder if available)   |
 | `consolidated_system` | Unified system name (prefer DefenseFinder if available) |

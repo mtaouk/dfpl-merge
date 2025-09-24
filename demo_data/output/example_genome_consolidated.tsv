@@ -1,0 +1,27 @@
+ID	source_type	consolidated_gene	consolidated_system
+example_genome	Padloc only	PDC-M05A	PDC-M05
+example_genome	Padloc only	PDC-M05B	PDC-M05
+example_genome	Both	cas3_I_5	CAS_Class1-Subtype-I-E
+example_genome	Both	cas8e_I-E_1	CAS_Class1-Subtype-I-E
+example_genome	Both	cse2gr11_I-E_2	CAS_Class1-Subtype-I-E
+example_genome	Both	cas7_I-E_16	CAS_Class1-Subtype-I-E
+example_genome	Both	cas5_I-E_3	CAS_Class1-Subtype-I-E
+example_genome	Both	cas6e_I_II_III_IV_V_VI_1	CAS_Class1-Subtype-I-E
+example_genome	Both	cas1_I-E_1	CAS_Class1-Subtype-I-E
+example_genome	Both	cas2_I-E_2	CAS_Class1-Subtype-I-E
+example_genome	Padloc only	SspF	DMS_other
+example_genome	Padloc only	DrmMII	DMS_other
+example_genome	Padloc only	PDC-S07	PDC-S07
+example_genome	Padloc only	ATPase-Toprim_I-B	retron_I-B
+example_genome	Padloc only	RT_I-B	retron_I-B
+example_genome	Padloc only	DrmMII	DMS_other
+example_genome	Padloc only	oMTase	DMS_other
+example_genome	Padloc only	PDC-S07	PDC-S07
+example_genome	Padloc only	PD-T4-6	PD-T4-6
+example_genome	Both	LmuA_effector_Lipase	Lamassu-Lipase
+example_genome	Both	LmuC_acc_Lipase	Lamassu-Lipase
+example_genome	Both	LmuB_SMC_Lipase	Lamassu-Lipase
+example_genome	DefenseFinder only	PD-T7-1	PD-T7-1
+example_genome	Both	GajA	Gabija
+example_genome	Both	GajB_3	Gabija
+example_genome	Padloc only	PDC-S71	PDC-S71
