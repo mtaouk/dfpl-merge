@@ -1,2 +1,5 @@
 .DS_Store
 .Rhistory
+/demo_data/.DS_store
+/demo_data/output/.DS_store
+
